@@ -1,20 +1,20 @@
-#The purpose of these fuctions are to convert between failure times and interfailure times
-failureT_to_interF <- function(interfailure)
+in#The purpose of these fuctions are to convert between failure times and interfailure times
+failureT_to_interF <- function(failure_T)
 {
 
-failure_T <- c()
-failure_T[1] = interfailure[1] #initial value for failure time
+interfailure <- c()
+interfailure[1] = failure_T[1] #initial value for failure time
 
 n = 2
 
-while(n<=length(interfailure))
+while(n<=length(failure_T))
 {
-   failure_T[n] = interfailure[n] - interfailure[n-1]
+  interfailure[n] = failure_T[n] - failure_T[n-1]
    
    n = n+1
 }
 
-return(failure_T)#return failure times(failure_T)
+return(interfailure)#return failure times(failure_T)
 }
 
 
@@ -24,25 +24,25 @@ return(failure_T)#return failure times(failure_T)
 
 
 
- interF_to_failureT <- function(failure_T)
+ interF_to_failureT <- function(interfailure)
 {
 
 
-interfailure <- c()
+   failure_T <- c()
 
-interfailure[1] = failure_T[1] #initial value for failure time
+   failure_T[1] = interfailure[1] #initial value for failure time
 
 n = 2
 
-while(n<=length(failure_T))
+while(n<=length(interfailure))
 {
-  interfailure[n] = failure_T[n] + interfailure[n-1]
+  failure_T[n] = interfailure[n] + failure_T[n-1]
   
   n = n + 1
 }
 
 
-return(interfailure)#return interfailure times(interfailure)
+return(failure_T)#return interfailure times(interfailure)
 }
 
 
