@@ -61,15 +61,16 @@ failureC_to_failureT <- function(initial,final,num_count)
   
 failure_T <- c()
 
-failure_Interval = final - initial
+failure_Interval = final - initial+1
 
 change = failure_Interval / num_count
 
-i = 0
+i = 1
+failure_T[0] = 0
 
-while(i < change)
+while(i < num_count)
 {
-  failure_T[i] = i * change
+  failure_T[i] = failure_T[i-1] + ( 0.5 + i) * change
   
   i = i + 1
 }
