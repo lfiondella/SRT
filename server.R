@@ -8,20 +8,45 @@ source("Data_Format.R")
 
 shinyServer(function(input, output) {#reactive shiny fuction
   
+  if(.Platform$OS.type == "windows")
+    perl <- "C:/Strawberry/perl/bin/perl.exe"
+  else 
+    perl <- "/usr/bin/perl"
+  
+  
   output$distPlot <- renderPlot({ #reactive function, basically Main()
     
     inFile <- input$file #Read of input file
     if (is.null(inFile))#error handling for null file pointer
       return("Please Upload a CSV File")
-    if (input$type==1)
-      data <- read.xls(inFile$datapath,sheet=1)#Reads xls and xlsx files. Error handling needed
-    if (input$type==2)
+    else if (input$type==1)
+      data <- read.xls(inFile$datapath,sheet=1,perl=perl)#Reads xls and xlsx files. Perl needed for local windows machines if using newest versions
+    else if (input$type==2)
       data <- read.csv(inFile$datapath, header = input$header, sep = input$sep , quote = " % ")#same as before needs error handling
     
-    #if (data[1] =="FC")
-    #two coumns
-    #else
-    #one column
+    if (names(data[1]) =="FT")
+      {
+      len <- nrow(data[1])
+      FC<-c(1:len)
+      names(FC)<-"FC"
+      #data <- failureT_to_interF(data)
+      data<-cbind(FC,data)
+      }
+    else if(names(data[1]) == "IF")
+      {
+      data[2] <-interF_to_failureT(data)
+      data[1] <- c(1:length(data))
+      }
+    else if(names(data[1]) == "FC")
+      {
+      if(names(data[2])=="FT")
+        data[2] <- failureT_to_interF(data[2])
+      else if(names(data[2])=="IF")
+        data[2] <-interF_to_failureT(data[2])
+       }
+    else
+      data=data
+    
     
     Time <- names(data[1])#generic name of column name of data frame (x-axis)
     Failure <- names(data[2])#(y-axis)
