@@ -24,7 +24,7 @@ return(interfailure)#return failure times(failure_T)
 
 
 
- interF_to_failureT <- function(interfailure)
+ interF_to_failureT <- function(interfailure) #interfailure to failure times
 {
 
 
@@ -54,23 +54,23 @@ return(failure_T)#return interfailure times(interfailure)
 
 
 
-failureC_to_failureT <- function(initial,final,num_count)
+failureC_to_failureT <- function(initial,final,num_count) #failure count to failure time
 {
 
  
   
 failure_T <- c()
 
-failure_Interval = final - initial
+failure_Interval = final - initial #times interval
 
-change = failure_Interval / num_count
+change = failure_Interval / num_count #offset to space out failure times
 
 i = 0
 j = 1
 
 while(i < num_count)
 {
-  failure_T[j] = initial + (( 0.5 + i) * change)
+  failure_T[j] = initial + (( 0.5 + i) * change) #sets failure times 
   
   i = i + 1
   j = j + 1
