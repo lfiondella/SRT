@@ -1,4 +1,4 @@
-in#The purpose of these fuctions are to convert between failure times and interfailure times
+#The purpose of these fuctions are to convert between failure times and interfailure times
 failureT_to_interF <- function(failure_T)
 {
 
@@ -24,7 +24,7 @@ return(interfailure)#return failure times(failure_T)
 
 
 
- interF_to_failureT <- function(interfailure)
+ interF_to_failureT <- function(interfailure) #interfailure to failure times
 {
 
 
@@ -54,24 +54,31 @@ return(failure_T)#return interfailure times(interfailure)
 
 
 
-failureC_to_failureT <- function(failure_Count)
+failureC_to_failureT <- function(initial,final,num_count) #failure count to failure time
 {
 
+ 
+  
 failure_T <- c()
 
-n = 1
-i = 1
+failure_Interval = final - initial #times interval
 
-while(n<=length(failure_Count))
+change = failure_Interval / num_count #offset to space out failure times
+
+i = 0
+j = 1
+
+while(i < num_count)
 {
-  if(failure_Count[n] != 0)
-  {
-    failure_T[i] = n
-    i = i + 1
-  }
+  failure_T[j] = initial + (( 0.5 + i) * change) #sets failure times 
   
-  n = n + 1;
+  i = i + 1
+  j = j + 1
 }
+
+
+
+
 
 return(failure_T)#return failure times(failure_t)
 }

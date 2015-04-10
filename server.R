@@ -63,7 +63,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
     value <- c("red","blue") 
     model <- ""
     if (input$OD == TRUE){
-      p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) + geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
+      p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
       label <- c("Original Data","")
       value <- c("blue","red")
     }
