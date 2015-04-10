@@ -24,32 +24,41 @@ shinyServer(function(input, output) {#reactive shiny fuction
     else if (input$type==2)
       data <- read.csv(inFile$datapath, header = input$header, sep = input$sep , quote = " % ")#same as before needs error handling
     
-    if (names(data[1]) =="FT")
-      {
-      len <- nrow(data[1])
-      FC<-c(1:len)
+    
+    len <- nrow(data[1]) #length of data
+    FC<-data.frame(c(1:len))  #vector of failure counts from 1 to length
+    names(FC)<-"FC" #naming the vector
+    
+    if (names(data[1]) =="FT"){ #if the first column is failure times, convert to interfail, add failure count
+      FT <- data[,1]
+      names(FT)<-"FT"
+      IF <- data.frame(failureT_to_interF(data[,1])) #converts from failure times to interfailure times
+      names(IF)<-"IF"
+    #data<-cbind(FC,data) #combines the two columns
+    }else if(names(data[1]) == "IF"){
+      IF <- data[,1]
+      names(IF)<-"IF"
+      FT <-data.frame(interF_to_failureT(data)) #do we need to convert back from IF to FT
+      names(FT)<-"FT"
+    }else if(names(data[1]) == "FC") {
+      FC <- data[1]
       names(FC)<-"FC"
-      #data <- failureT_to_interF(data)
-      data<-cbind(FC,data)
-      }
-    else if(names(data[1]) == "IF")
-      {
-      data[2] <-interF_to_failureT(data)
-      data[1] <- c(1:length(data))
-      }
-    else if(names(data[1]) == "FC")
-      {
-      if(names(data[2])=="FT")
-        data[2] <- failureT_to_interF(data[2])
-      else if(names(data[2])=="IF")
-        data[2] <-interF_to_failureT(data[2])
-       }
-    else
-      data=data
+      if(names(data[2])=="FT"){
+        FT <- data[,2]
+        names(FT)<-"FT"
+        IF <- data.frame(failureT_to_interF(data[,2]))
+        names(IF)<-"IF"
+      }else if(names(data[2])=="IF"){
+        IF <- data[,2]
+        names(IF)<-"IF"
+        FT <-data.frame(interF_to_failureT(data[,2]))}
+    }
+    data <- cbind(FC,IF)
+
     
     
-    Time <- names(data[1])#generic name of column name of data frame (x-axis)
-    Failure <- names(data[2])#(y-axis)
+    Time <- names(IF)#data[1])#generic name of column name of data frame (x-axis)
+    Failure <- names(FC)#data[2])#(y-axis)
     p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
     value <- c("red","blue") 
     model <- ""
@@ -71,12 +80,14 @@ shinyServer(function(input, output) {#reactive shiny fuction
       model <- c("Geometric Model")
     }
     if (input$Model == "GO"){
-      y <- as.vector(data[,2])
-      print(y)
-      newdata <- GO_BM_MLE(y)
-      newdata <- y * as.vector(newdata)
+      #y <- as.vector(data[,2])
+      #print(y)
+      
+      GO_BM <- GO_BM_MLE(FT)#y)
+      newdata <- FT * as.vector(GO_BM)
       newdata <- data.frame(newdata)
-      data[,2] <- newdata[,1]
+      
+      data <- cbind(FC, newdata)
       print(data)
       p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
       p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
