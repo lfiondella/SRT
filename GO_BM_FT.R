@@ -56,7 +56,8 @@ GO_BM_MLE<-function(x){
   f[1] <- aMLE
   f[2] <- bMLE
   x <- f[1:2]
-  f <- data.frame(x)
+  names(x) <- "GOBM"
+  f <- data.frame(x,row.names = NULL)
   print(x)
   return(x)
 }	 

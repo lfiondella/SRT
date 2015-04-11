@@ -3,7 +3,7 @@ library(gdata) #Used for read.xls function
 library(ggplot2)#ggplot function
 source("model.R")#Source for our reliabilty models
 source("JMmodel.R")
-source("GO_BM.R")
+source("GO_BM_FT.R")
 source("Data_Format.R")
 
 shinyServer(function(input, output) {#reactive shiny fuction
@@ -69,6 +69,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
     }
     p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
     if (input$Model == "JM"){
+      data <- cbind(FC,FT)
       newdata <- JMmodel(data)
       p <- p + geom_point(data=newdata,aes(color="red",group="Jolinski-Moranda Model"))
       model <- c("Jolinski-Moranda Model")
