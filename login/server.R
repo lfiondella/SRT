@@ -1,9 +1,12 @@
 library(shiny)
-shinyServer(function(input, output,session) {
+shinyServer(function(input, output, session) {
+  pass <- "password"
   
   output$pwd <- renderText({
-    paste0("Your PW is: ",input$passwd)
+    if (pass==input$passwd) #toString()
+      paste("Correct. Welcome!")
+    else
+      paste("Incorrect password. Try Again.")
+      #paste("You entered: ",input$passwd)
   })
-  
-  
 })
