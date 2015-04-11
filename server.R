@@ -85,13 +85,20 @@ shinyServer(function(input, output) {#reactive shiny fuction
       #print(y)
       
       GO_BM <- GO_BM_MLE(FT)#y)
-      newdata <- FT * as.vector(GO_BM)
+      aMLE <- as.numeric(GO_BM[1])
+      bMLE <- as.numeric(GO_BM[2])
+     
+      newdata <- MVF(FT,aMLE,bMLE)
       newdata <- data.frame(newdata)
       
       data <- cbind(FC, newdata)
-      print(data)
+      colnames(data) <- c("FC","IF")
+      #print(data)
       p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
       p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
+      
+      
+      #p <- p + stat_function(fun = MVF,aes(color="red",group="Geol-Okumoto Model"))
       model <- c("Geol-Okumoto Model")
     }
     if (input$Model == "YS"){
@@ -111,4 +118,4 @@ shinyServer(function(input, output) {#reactive shiny fuction
     #plot(data) Leave this here to use if ggplot() stops working. 
   } )
 })
-
+MVF <- function(x,aMLE,bMLE) {return(aMLE*(1-exp(-bMLE*x)))}
