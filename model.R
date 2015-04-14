@@ -1,3 +1,5 @@
+#Unused implementation, ignore this file for now
+
 GeoModel <- function(data)
 {
   

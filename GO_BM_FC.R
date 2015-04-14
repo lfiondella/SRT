@@ -1,3 +1,5 @@
+#Currently unused implementation of the Goel Okumoto model
+
 kVec <- c(15, 29, 22, 37, 2, 5, 36, 29, 4, 27, 17, 32, 21, 22, 6, 7, 9, 5, 3)
 k <- length(kVec)
 K <- sum(kVec)
