@@ -85,20 +85,20 @@ shinyServer(function(input, output) {#reactive shiny fuction
       #print(y)
       
       GO_BM <- GO_BM_MLE(FT)#y)
-      aMLE <- as.numeric(GO_BM[1])
+      aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
       bMLE <- as.numeric(GO_BM[2])
      
-      newdata <- MVF(FT,aMLE,bMLE)
-      newdata <- data.frame(newdata)
+      newdata <- MVF(FT,aMLE,bMLE)#Mean Value Function that takes Failure Count and the two MLE variables
+      newdata <- data.frame(newdata)#Type cast
       
-      data <- cbind(FC, newdata)
-      colnames(data) <- c("FC","IF")
-      #print(data)
-      p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
+      data <- cbind(newdata, FT)#added a column of Failure Time to the Mean Value Function Return
+      colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      print(data)
+      #p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
       p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
       
       
-      #p <- p + stat_function(fun = MVF,aes(color="red",group="Geol-Okumoto Model"))
+      #p <- p + stat_function(fun = MVF(FT,aMLE,bMLE),aes(color="red",group="Geol-Okumoto Model"))
       model <- c("Geol-Okumoto Model")
     }
     if (input$Model == "YS"){
@@ -118,4 +118,3 @@ shinyServer(function(input, output) {#reactive shiny fuction
     #plot(data) Leave this here to use if ggplot() stops working. 
   } )
 })
-MVF <- function(x,aMLE,bMLE) {return(aMLE*(1-exp(-bMLE*x)))}
