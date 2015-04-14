@@ -5,7 +5,7 @@ GO_BM_FT_MVF <- function(aMLE,bMLE,data){
 }
 
 #log-likelihood function
-GO_BM_FT_LLF <- function(aMLE,bMLE,data){
+GO_BM_FT_LLF <- function(aMLE,bMLE,data,tn,n){
  		lnl <- -aMLE*(1-exp(-bMLE*tn))+n*log(aMLE)+n*log(bMLE)-bMLE*sum(data)
  		return(lnl)
 }
