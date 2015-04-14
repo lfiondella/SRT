@@ -15,8 +15,9 @@ GO_BM_MLE<-function(x){
   
   
   #Step-1: Determine initial parameter estimate for parameter 'b'
-  
+  #initial b factor before calculations
   b0 <- n/sumT
+  #a=n
   
   #Step-2: Bracket root
   
@@ -53,11 +54,12 @@ GO_BM_MLE<-function(x){
   #MLE of parameter 'a'
   aMLE <- n/(1-exp(-bMLE*(tn)))
   #	 print(aMLE)
-  f[1] <- aMLE
-  f[2] <- bMLE
-  x <- f[1:2]
+  #f[1] <- aMLE
+  #f[2] <- bMLE
+  x<- c(aMLE,bMLE,n,b0)
+  #x <- f[1:2]
   names(x) <- "GOBM"
-  f <- data.frame(x,row.names = NULL)
+  #f <- data.frame(x,row.names = NULL)
   print(x)
   return(x)
 }	 
