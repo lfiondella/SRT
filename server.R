@@ -54,7 +54,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
         FT <-data.frame(interF_to_failureT(data[,2]))
         names(FT)<-"FT"}
     }
-    data <- cbind(FC,IF)
+    data <- cbind(FC,IF) #combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
 
     
     
