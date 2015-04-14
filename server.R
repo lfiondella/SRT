@@ -5,6 +5,7 @@ source("model.R")#Source for our reliabilty models
 source("JMmodel.R")
 source("GO_BM_FT.R")
 source("Data_Format.R")
+source("GO_MVF_lnl.R")
 
 shinyServer(function(input, output) {#reactive shiny fuction
   
@@ -50,14 +51,15 @@ shinyServer(function(input, output) {#reactive shiny fuction
       }else if(names(data[2])=="IF"){#if second row is interfailure times find FT
         IF <- data[,2]
         names(IF)<-"IF"
-        FT <-data.frame(interF_to_failureT(data[,2]))}
+        FT <-data.frame(interF_to_failureT(data[,2]))
+        names(FT)<-"FT"}
     }
     data <- cbind(FC,IF)
 
     
     
-    Time <- names(IF)#data[1])#generic name of column name of data frame (x-axis)
-    Failure <- names(FC)#data[2])#(y-axis)
+    Time <- names(data[2])#generic name of column name of data frame (x-axis)
+    Failure <- names(data[1])#(y-axis)
     p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
     value <- c("red","blue") 
     model <- ""
@@ -81,13 +83,18 @@ shinyServer(function(input, output) {#reactive shiny fuction
     }
     if (input$Model == "GO"){
       
-      GO_BM <- GO_BM_MLE(FT)#y)
+      GO_BM <- GO_BM_MLE(FT)#finds aMLE and bMLE from failure times
       aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
-      bMLE <- as.numeric(GO_BM[2])
+      bMLE <- as.numeric(GO_BM[2])#bMLE returned from GO_BM_MLE
      
-      newdata <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
-      data <- cbind(newdata, FT)#added a column of Failure Time to the Mean Value Function Return
-      colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
+      names(MVF_data)<-"MVF"
+      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
+      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      
+      Time <- names(data[2])#generic name of column name of data frame (x-axis)
+      Failure <- names(data[1])#(y-axis)
+      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
       
       #p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
       p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))  
