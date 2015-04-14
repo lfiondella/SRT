@@ -1,3 +1,6 @@
+#Contains a number of functions for using aMLE and bMLE calculated in
+#GO_BM_FT for used for graphing
+
 #Mean Value Function
 GO_BM_FT_MVF <- function(aMLE,bMLE,data){		return(aMLE*(1-exp(-bMLE*data)))}
 
