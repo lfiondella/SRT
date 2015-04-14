@@ -30,7 +30,7 @@ tags$head(includeScript("analytics/google-analytics.js")),
               "Goel-Okumoto Model" = "GO",
               "Yamada S-Shaped" = "YS",
               "Geometric" = "GEO"),selected = NULL),
-       conditionalPanel(condition="input.Model != 'NM'",checkboxInput('OD', 'View Original Data', TRUE)),
+       #conditionalPanel(condition="input.Model != 'NM'",checkboxInput('OD', 'View Original Data', TRUE)),
     width=3),
 
 

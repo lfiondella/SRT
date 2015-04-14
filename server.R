@@ -64,11 +64,9 @@ shinyServer(function(input, output) {#reactive shiny fuction
     p<- p+ ggtitle("Original Data")
     value <- c("red","blue") 
     model <- ""
-    if (input$OD == TRUE){
-      p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
-      label <- c("Original Data","")
-      value <- c("blue","red")
-    }
+    p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
+    label <- c("Original Data","")
+    value <- c("blue","red")
     p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
     if (input$Model == "JM"){
       data <- cbind(FC,FT)
@@ -110,8 +108,10 @@ shinyServer(function(input, output) {#reactive shiny fuction
     }
     if(input$Model == "NM"){
       label = c("Original Data","")
+      model = c("Original Data")
     }else{
       label = c(model,"")
+      value = c("red","")
     }
     p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
     p<- p+ ggtitle(model)
