@@ -29,26 +29,25 @@ shinyServer(function(input, output) {#reactive shiny fuction
     FC<-data.frame(c(1:len))  #vector of failure counts from 1 to length
     names(FC)<-"FC" #naming the vector
     
-    if (names(data[1]) =="FT"){ #if the first column is failure times, convert to interfail, add failure count
+    if (names(data[1]) =="FT"){ #if the first column is failure times, convert to interfail
       FT <- data[,1]
       names(FT)<-"FT"
       IF <- data.frame(failureT_to_interF(data[,1])) #converts from failure times to interfailure times
       names(IF)<-"IF"
-    #data<-cbind(FC,data) #combines the two columns
-    }else if(names(data[1]) == "IF"){
+    }else if(names(data[1]) == "IF"){ #if the first column is interfailure times, convert to failure time
       IF <- data[,1]
       names(IF)<-"IF"
-      FT <-data.frame(interF_to_failureT(data)) #do we need to convert back from IF to FT
+      FT <-data.frame(interF_to_failureT(data[,1])) 
       names(FT)<-"FT"
-    }else if(names(data[1]) == "FC") {
+    }else if(names(data[1]) == "FC") { #if the first column is failure count and next rows are IF or FT
       FC <- data[1]
       names(FC)<-"FC"
-      if(names(data[2])=="FT"){
+      if(names(data[2])=="FT"){#if second row is failure time find IF
         FT <- data[,2]
         names(FT)<-"FT"
         IF <- data.frame(failureT_to_interF(data[,2]))
         names(IF)<-"IF"
-      }else if(names(data[2])=="IF"){
+      }else if(names(data[2])=="IF"){#if second row is interfailure times find FT
         IF <- data[,2]
         names(IF)<-"IF"
         FT <-data.frame(interF_to_failureT(data[,2]))}
@@ -81,23 +80,17 @@ shinyServer(function(input, output) {#reactive shiny fuction
       model <- c("Geometric Model")
     }
     if (input$Model == "GO"){
-      #y <- as.vector(data[,2])
-      #print(y)
       
       GO_BM <- GO_BM_MLE(FT)#y)
       aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
       bMLE <- as.numeric(GO_BM[2])
      
-      newdata <- MVF(FT,aMLE,bMLE)#Mean Value Function that takes Failure Count and the two MLE variables
-      newdata <- data.frame(newdata)#Type cast
-      
+      newdata <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
       data <- cbind(newdata, FT)#added a column of Failure Time to the Mean Value Function Return
       colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
-      print(data)
+      
       #p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
-      p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
-      
-      
+      p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))  
       #p <- p + stat_function(fun = MVF(FT,aMLE,bMLE),aes(color="red",group="Geol-Okumoto Model"))
       model <- c("Geol-Okumoto Model")
     }

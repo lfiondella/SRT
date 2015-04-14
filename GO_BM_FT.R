@@ -69,5 +69,5 @@ GO_BM_MLE<-function(x){
 
 MVF <- function(x,aMLE,bMLE) {return(aMLE*(1-exp(-bMLE*x)))}
 
-Rel <- function(x,aMLE,bMLE) {return(exp(-bMLE*(aMLE-136)*x))}
+Rel <- function(x,aMLE,bMLE) {return(exp(-bMLE*(aMLE-length(x))*x))}
 
