@@ -60,7 +60,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
     
     Time <- names(data[2])#generic name of column name of data frame (x-axis)
     Failure <- names(data[1])#(y-axis)
-    p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+    p <- ggplot(,aes_string(x=Time,y=Failure))#This function invokes the ggplot function and assigns it to our plot object p. Any changes must be made to p.
     p<- p+ ggtitle("Original Data")
     value <- c("red","blue") 
     model <- ""
@@ -108,10 +108,10 @@ shinyServer(function(input, output) {#reactive shiny fuction
       p <- p + geom_line(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
       model <- c("Yamada S-Shaped Model")
     }
-    if(input$OD == FALSE){
-      label = c(model,"")
+    if(input$Model == "NM"){
+      label = c("Original Data","")
     }else{
-      label = c("Original Data",model)
+      label = c(model,"")
     }
     p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
     p<- p+ ggtitle(model)
