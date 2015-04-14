@@ -60,15 +60,13 @@ shinyServer(function(input, output) {#reactive shiny fuction
     
     Time <- names(data[2])#generic name of column name of data frame (x-axis)
     Failure <- names(data[1])#(y-axis)
-    p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+    p <- ggplot(,aes_string(x=Time,y=Failure))#This function invokes the ggplot function and assigns it to our plot object p. Any changes must be made to p.
     p<- p+ ggtitle("Original Data")
     value <- c("red","blue") 
     model <- ""
-    if (input$OD == TRUE){
-      p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
-      label <- c("Original Data","")
-      value <- c("blue","red")
-    }
+    p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
+    label <- c("Original Data","")
+    value <- c("blue","red")
     p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
     if (input$Model == "JM"){
       data <- cbind(FC,FT)
@@ -108,10 +106,12 @@ shinyServer(function(input, output) {#reactive shiny fuction
       p <- p + geom_line(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
       model <- c("Yamada S-Shaped Model")
     }
-    if(input$OD == FALSE){
-      label = c(model,"")
+    if(input$Model == "NM"){
+      label = c("Original Data","")
+      model = c("Original Data")
     }else{
-      label = c("Original Data",model)
+      label = c(model,"")
+      value = c("red","")
     }
     p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
     p<- p+ ggtitle(model)
