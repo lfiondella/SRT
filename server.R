@@ -5,7 +5,7 @@ source("model.R")#Source for our reliabilty models
 source("JMmodel.R")
 source("GO_BM_FT.R")
 source("Data_Format.R")
-source("GO_MVF_lnl.R")
+source("GO_MVF_lnl_.R")
 
 shinyServer(function(input, output) {#reactive shiny fuction
   
