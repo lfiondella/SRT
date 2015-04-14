@@ -67,4 +67,7 @@ GO_BM_MLE<-function(x){
 
 #Mean Value function
 
-MVF <- function(x) {aMLE*(1-exp(-bMLE*x))}
+MVF <- function(x,aMLE,bMLE) {return(aMLE*(1-exp(-bMLE*x)))}
+
+Rel <- function(x,aMLE,bMLE) {return(exp(-bMLE*(aMLE-136)*x))}
+
