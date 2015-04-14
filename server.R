@@ -61,6 +61,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
     Time <- names(data[2])#generic name of column name of data frame (x-axis)
     Failure <- names(data[1])#(y-axis)
     p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+    p<- p+ ggtitle("Original Data")
     value <- c("red","blue") 
     model <- ""
     if (input$OD == TRUE){
@@ -113,6 +114,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
       label = c("Original Data",model)
     }
     p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
+    p<- p+ ggtitle(model)
     
     p
     #plot(data) Leave this here to use if ggplot() stops working. 
