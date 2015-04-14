@@ -6,7 +6,7 @@ shinyUI(fluidPage(
            br(),
            tags$form(
              passwordInput("passwd",label = "Enter password"),
-             submitButton("send passwd to shiny")
+             submitButton("send password to shiny")
            ),
            textOutput("pwd")
            )
