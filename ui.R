@@ -26,7 +26,7 @@ tags$head(includeScript("analytics/google-analytics.js")),
       ),
      # checkboxInput('reverse', "Reverse x and y", FALSE),
       selectInput("Model", "Select implementation model",
-            c("No Model Selected"="NM","Jolinski-Moranda Model" = "JM",
+            c("No Model Selected"="NM","Jelinski-Moranda Model" = "JM",
               "Goel-Okumoto Model" = "GO"#,
               #"Yamada S-Shaped" = "YS",
               #"Geometric" = "GEO"

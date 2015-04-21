@@ -83,9 +83,9 @@ shinyServer(function(input, output) {#reactive shiny fuction
       Failure <- names(data[1])#(y-axis)
       p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
       
-      p <- p + geom_line(data=data,aes(color="red",group="Jolinski-Moranda Model"))
+      p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
       
-      model <- c("Jolinski-Moranda Model")
+      model <- c("Jelinski-Moranda Model")
     }
     if (input$Model == "GEO"){
       newdata <- GeoModel(data)
