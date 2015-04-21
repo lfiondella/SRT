@@ -27,9 +27,11 @@ tags$head(includeScript("analytics/google-analytics.js")),
      # checkboxInput('reverse', "Reverse x and y", FALSE),
       selectInput("Model", "Select implementation model",
             c("No Model Selected"="NM","Jolinski-Moranda Model" = "JM",
-              "Goel-Okumoto Model" = "GO",
-              "Yamada S-Shaped" = "YS",
-              "Geometric" = "GEO"),selected = NULL),
+              "Goel-Okumoto Model" = "GO"#,
+              #"Yamada S-Shaped" = "YS",
+              #"Geometric" = "GEO"
+              ),selected = NULL),
+             #here because of commented out line above
        #conditionalPanel(condition="input.Model != 'NM'",checkboxInput('OD', 'View Original Data', TRUE)),
     width=3),
 
