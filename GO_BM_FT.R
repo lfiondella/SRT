@@ -30,7 +30,7 @@ GO_BM_MLE<-function(x){
   rightEndPointMLE <- GO_BM_DDB(rightEndPoint)
   
   while(leftEndPointMLE*rightEndPointMLE > 0 & i <= maxIterations){
-    print('In Step 2 while loop of GO_BM_FT.R')
+    #print('In Step 2 while loop of GO_BM_FT.R')
     leftEndPoint <- leftEndPoint/2
     leftEndPointMLE <- GO_BM_DDB(leftEndPoint)
     rightEndPoint <- 2*rightEndPoint
@@ -61,7 +61,7 @@ GO_BM_MLE<-function(x){
   
   names(x) <- "GOBM"
   #f <- data.frame(x,row.names = NULL)
-  print(x)
+  #print(x)
   return(x)
 }	 
 #NHPP log-likelihood function

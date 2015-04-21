@@ -2,7 +2,7 @@ library(shiny)#I wonder why this is here?
 library(gdata) #Used for read.xls function
 library(ggplot2)#ggplot function
 source("model.R")#Source for our reliabilty models
-source("JMmodel.R")
+source("JM_BM.R")
 source("GO_BM_FT.R")
 source("Data_Format.R")
 source("GO_MVF_lnl_.R")
@@ -27,34 +27,34 @@ shinyServer(function(input, output) {#reactive shiny fuction
     
     
     len <- nrow(data[1]) #length of data
-    FC<-data.frame(c(1:len))  #vector of failure counts from 1 to length
+    FC<-c(1:len)  #vector of failure counts from 1 to length
     names(FC)<-"FC" #naming the vector
     
     if (names(data[1]) =="FT"){ #if the first column is failure times, convert to interfail
       FT <- data[,1]
       names(FT)<-"FT"
-      IF <- data.frame(failureT_to_interF(data[,1])) #converts from failure times to interfailure times
+      IF <- failureT_to_interF(data[,1]) #converts from failure times to interfailure times
       names(IF)<-"IF"
     }else if(names(data[1]) == "IF"){ #if the first column is interfailure times, convert to failure time
       IF <- data[,1]
       names(IF)<-"IF"
-      FT <-data.frame(interF_to_failureT(data[,1])) 
+      FT <-interF_to_failureT(data[,1]) 
       names(FT)<-"FT"
     }else if(names(data[1]) == "FC") { #if the first column is failure count and next rows are IF or FT
-      FC <- data[1]
+      FC <- data[,1]
       names(FC)<-"FC"
       if(names(data[2])=="FT"){#if second row is failure time find IF
         FT <- data[,2]
         names(FT)<-"FT"
-        IF <- data.frame(failureT_to_interF(data[,2]))
+        IF <- failureT_to_interF(data[,2])
         names(IF)<-"IF"
       }else if(names(data[2])=="IF"){#if second row is interfailure times find FT
         IF <- data[,2]
         names(IF)<-"IF"
-        FT <-data.frame(interF_to_failureT(data[,2]))
+        FT <-interF_to_failureT(data[,2])
         names(FT)<-"FT"}
     }
-    data <- cbind(FC,IF)
+    data <- cbind(data.frame(FC),data.frame(IF))
 
     
     
@@ -71,9 +71,21 @@ shinyServer(function(input, output) {#reactive shiny fuction
     }
     p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
     if (input$Model == "JM"){
-      data <- cbind(FC,FT)
-      newdata <- JMmodel(data)
-      p <- p + geom_point(data=newdata,aes(color="red",group="Jolinski-Moranda Model"))
+      JM_BM <- JM_BM_MLE(IF)
+      aMLE <- as.numeric(JM_BM[1])#aMLE returned from GO_BM_MLE
+      bMLE <- as.numeric(JM_BM[2])#bMLE returned from GO_BM_MLE
+      
+      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
+      names(MVF_data)<-"MVF"
+      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
+      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      
+      Time <- names(data[2])#generic name of column name of data frame (x-axis)
+      Failure <- names(data[1])#(y-axis)
+      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+      
+      p <- p + geom_line(data=data,aes(color="red",group="Jolinski-Moranda Model"))
+      
       model <- c("Jolinski-Moranda Model")
     }
     if (input$Model == "GEO"){
