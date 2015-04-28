@@ -57,7 +57,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
 
     data <- cbind(data.frame(FC),data.frame(IF))#combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
 
-    
+    #
     
     Time <- names(data[2])#generic name of column name of data frame (x-axis)
     Failure <- names(data[1])#(y-axis)
