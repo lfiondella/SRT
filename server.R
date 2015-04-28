@@ -24,7 +24,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
       data <- read.xls(inFile$datapath,sheet=1,perl=perl)#Reads xls and xlsx files. Perl needed for local windows machines if using newest versions
     else if (input$type==2)
       data <- read.csv(inFile$datapath, header = input$header, sep = input$sep , quote = " % ")#same as before needs error handling
-    
+      
     
     len <- nrow(data[1]) #length of data
     FC<-c(1:len)  #vector of failure counts from 1 to length
