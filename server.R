@@ -14,18 +14,122 @@ shinyServer(function(input, output) {#reactive shiny fuction
   else 
     perl <- "/usr/bin/perl"
   
+  JMR <- reactive({JM_BM_MLE(typeConvert()$IF)})#these are reactive functions of the originals 
+  GOR <- reactive({GO_BM_MLE(typeConvert()$FT)})#so that they may be called outside the plot
   
   output$distPlot <- renderPlot({ #reactive function, basically Main()
     
+    uploadData<-fileInput()
+    if(is.null(uploadData))
+      return("upload file")
+      
+    data <- typeConvert()
+    FC <- data$FC#[,1] 
+    IF <- data$IF#[,2] 
+    FT <- data$FT#[,3]
+   
+    data <- cbind(data.frame(FC),data.frame(IF))#combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
+
+    
+    
+    Time <- names(data[2])#generic name of column name of data frame (x-axis)
+    Failure <- names(data[1])#(y-axis)
+    p <- ggplot(,aes_string(x=Time,y=Failure))#This function invokes the ggplot function and assigns it to our plot object p. Any changes must be made to p.
+    p<- p+ ggtitle("Original Data")
+    value <- c("red","blue") 
+    model <- ""
+    p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
+    label <- c("Original Data","")
+    value <- c("blue","red")
+    p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
+    
+    
+    if (input$Model == "JM"){
+      model <- c("Jelinski-Moranda Model")
+      JM_BM <- JMR()
+      aMLE <- as.numeric(JM_BM[1])#aMLE returned from GO_BM_MLE
+      bMLE <- as.numeric(JM_BM[2])#bMLE returned from GO_BM_MLE
+      
+      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
+      names(MVF_data)<-"MVF"
+      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
+      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      
+      Time <- names(data[2])#generic name of column name of data frame (x-axis)
+      Failure <- names(data[1])#(y-axis)
+      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+      p <- p + geom_point(data=data,aes(color="red",group="Jelinski-Moranda Model"))
+      p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
+      
+      
+    }
+    if (input$Model == "GEO"){
+      newdata <- GeoModel(data)
+      p <- p + geom_point(data=newdata,aes(color="red",group="Geometric Model"))
+      p <- p + geom_line(data=newdata,aes(color="red",group="Geometric Model"))
+      model <- c("Geometric Model")
+    }
+    if (input$Model == "GO"){
+      model <- c("Geol-Okumoto Model")
+      GO_BM <- GO_BM_MLE(FT)#finds aMLE and bMLE from failure times
+      aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
+      bMLE <- as.numeric(GO_BM[2])#bMLE returned from GO_BM_MLE
+     
+      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
+      names(MVF_data)<-"MVF"
+      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
+      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      
+      Time <- names(data[2])#generic name of column name of data frame (x-axis)
+      Failure <- names(data[1])#(y-axis)
+      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+      
+      p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
+      p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
+      data <- cbind(FC, FT)
+      p <- p + geom_point(data=data,aes(color="blue",group="Geol-Okumoto Model"))
+      #p <- p + stat_function(fun = MVF(FT,aMLE,bMLE),aes(color="red",group="Geol-Okumoto Model"))
+      
+    }
+    if (input$Model == "YS"){
+      newdata <- YamadaModel(data)
+      p <- p + geom_point(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
+      p <- p + geom_line(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
+      model <- c("Yamada S-Shaped Model")
+    }
+    if(input$Model == "NM"){
+      label = c("Original Data","")
+      model = c("Original Data")
+    }else{
+      label = c(model,"")
+      value = c("red","")
+    }
+    p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
+    p<- p+ ggtitle(model)
+    
+    p
+    #plot(data) Leave this here to use if ggplot() stops working. 
+  } )
+  #data<-reactiveValues(FT=typeConvert()$FT)
+  output$aMLEText<-  renderText({
+    if (!is.null(input$file))
+      switch(input$Model,
+             GO = GOR(),
+             JM = JMR())        
+       })
+  fileInput<-reactive({
     inFile <- input$file #Read of input file
     if (is.null(inFile))#error handling for null file pointer
-      return("Please Upload a CSV File")
+      data<-NULL#return("Please Upload a CSV File")
     else if (input$type==1)
       data <- read.xls(inFile$datapath,sheet=1,perl=perl)#Reads xls and xlsx files. Perl needed for local windows machines if using newest versions
     else if (input$type==2)
       data <- read.csv(inFile$datapath, header = input$header, sep = input$sep , quote = " % ")#same as before needs error handling
-      
-    
+    data
+  })
+  
+  typeConvert<-reactive({
+    data<-fileInput()
     len <- nrow(data[1]) #length of data
     FC<-c(1:len)  #vector of failure counts from 1 to length
     names(FC)<-"FC" #naming the vector
@@ -54,82 +158,12 @@ shinyServer(function(input, output) {#reactive shiny fuction
         FT <-interF_to_failureT(data[,2])
         names(FT)<-"FT"}
     }
-
-    data <- cbind(data.frame(FC),data.frame(IF))#combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
-
-    
-    
-    Time <- names(data[2])#generic name of column name of data frame (x-axis)
-    Failure <- names(data[1])#(y-axis)
-    p <- ggplot(,aes_string(x=Time,y=Failure))#This function invokes the ggplot function and assigns it to our plot object p. Any changes must be made to p.
-    p<- p+ ggtitle("Original Data")
-    value <- c("red","blue") 
-    model <- ""
-    p <- p + geom_point(data = data,aes(color="blue",group="Original Data")) # geom_line(data = data,aes(color="blue",group="Original Data"))#adds scatter plot points to plot object
-    label <- c("Original Data","")
-    value <- c("blue","red")
-    p <- p + scale_color_manual(name = "Legend",  labels = c("Original Data"),values = c("blue"))
-    if (input$Model == "JM"){
-      JM_BM <- JM_BM_MLE(IF)
-      aMLE <- as.numeric(JM_BM[1])#aMLE returned from GO_BM_MLE
-      bMLE <- as.numeric(JM_BM[2])#bMLE returned from GO_BM_MLE
-      
-      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
-      names(MVF_data)<-"MVF"
-      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
-      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
-      
-      Time <- names(data[2])#generic name of column name of data frame (x-axis)
-      Failure <- names(data[1])#(y-axis)
-      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
-      
-      p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
-      
-      model <- c("Jelinski-Moranda Model")
-    }
-    if (input$Model == "GEO"){
-      newdata <- GeoModel(data)
-      p <- p + geom_point(data=newdata,aes(color="red",group="Geometric Model"))
-      p <- p + geom_line(data=newdata,aes(color="red",group="Geometric Model"))
-      model <- c("Geometric Model")
-    }
-    if (input$Model == "GO"){
-      
-      GO_BM <- GO_BM_MLE(FT)#finds aMLE and bMLE from failure times
-      aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
-      bMLE <- as.numeric(GO_BM[2])#bMLE returned from GO_BM_MLE
-     
-      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
-      names(MVF_data)<-"MVF"
-      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
-      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
-      
-      Time <- names(data[2])#generic name of column name of data frame (x-axis)
-      Failure <- names(data[1])#(y-axis)
-      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
-      
-      #p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
-      p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))  
-      #p <- p + stat_function(fun = MVF(FT,aMLE,bMLE),aes(color="red",group="Geol-Okumoto Model"))
-      model <- c("Geol-Okumoto Model")
-    }
-    if (input$Model == "YS"){
-      newdata <- YamadaModel(data)
-      p <- p + geom_point(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
-      p <- p + geom_line(data=newdata,aes(color="red",group="Yamada S-Shaped Model"))
-      model <- c("Yamada S-Shaped Model")
-    }
-    if(input$Model == "NM"){
-      label = c("Original Data","")
-      model = c("Original Data")
-    }else{
-      label = c(model,"")
-      value = c("red","")
-    }
-    p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
-    p<- p+ ggtitle(model)
-    
-    p
-    #plot(data) Leave this here to use if ggplot() stops working. 
-  } )
+    data <- new.env()#cbind(data.frame(FC),data.frame(IF),data.frame(FT))
+    data$FT<-FT#assign("FC",FC,"IF",IF,"FT",FT,envir=data)
+    data$IF<-IF
+    data$FC<-FC
+    data
+  })
+  
+  
 })

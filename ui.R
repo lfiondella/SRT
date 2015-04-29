@@ -33,14 +33,19 @@ tags$head(includeScript("analytics/google-analytics.js")),
               ),selected = NULL),
              #here because of commented out line above
        #conditionalPanel(condition="input.Model != 'NM'",checkboxInput('OD', 'View Original Data', TRUE)),
-    width=3),
+     textOutput("aMLEText"),
+     width=3),
 
 
     # Show a plot of the generated distribution
     mainPanel(
+      
+      
       plotOutput("distPlot", height = "700px")
    ,width=9)
-  ),
+  
+   
+   ),
   includeHTML("analytics/clustrmaps.html"),
   includeHTML("analytics/statcounter.html"),
 
