@@ -6,6 +6,7 @@ source("JM_BM.R")
 source("GO_BM_FT.R")
 source("Data_Format.R")
 source("GO_MVF_lnl_.R")
+source("GO_EM_FT.R")
 
 shinyServer(function(input, output) {#reactive shiny fuction
   
@@ -59,6 +60,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
 
     data <- cbind(data.frame(FC),data.frame(IF))#combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
 
+    GO_EM<-GO_EM_FT(FT)
     
     
     Time <- names(data[2])#generic name of column name of data frame (x-axis)
@@ -88,6 +90,24 @@ shinyServer(function(input, output) {#reactive shiny fuction
       p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
       
       model <- c("Jelinski-Moranda Model")
+    }
+    if (input$Model == "GO_EM_FT"){
+      JM_BM <- JM_BM_MLE(IF)
+      aMLE <- as.numeric(GO_EM[1])#aMLE returned from GO_BM_MLE
+      bMLE <- as.numeric(GO_EM[2])#bMLE returned from GO_BM_MLE
+      
+      MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
+      names(MVF_data)<-"MVF"
+      data <- cbind(MVF_data, FT)#added a column of Failure Time to the Mean Value Function Return
+      #colnames(data) <- c("FC","IF")#ggplot complains if it doesnt match 
+      
+      Time <- names(data[2])#generic name of column name of data frame (x-axis)
+      Failure <- names(data[1])#(y-axis)
+      p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
+      
+      p <- p + geom_line(data=data,aes(color="red",group="Goel-Okumoto Model(EM)"))
+      
+      model <- c("Goel-Okumoto Model(EM)")
     }
     if (input$Model == "GEO"){
       newdata <- GeoModel(data)
