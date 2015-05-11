@@ -17,6 +17,8 @@ shinyServer(function(input, output) {#reactive shiny fuction
   
   output$distPlot <- renderPlot({ #reactive function, basically Main()
     
+
+    
     inFile <- input$file #Read of input file
     if (is.null(inFile))#error handling for null file pointer
       return("Please Upload a CSV File")
@@ -128,8 +130,12 @@ shinyServer(function(input, output) {#reactive shiny fuction
     }
     p <- p + scale_color_manual(name = "Legend",  labels = label,values = value)
     p<- p+ ggtitle(model)
-    
+ 
     p
+
     #plot(data) Leave this here to use if ggplot() stops working. 
   } )
+  output$text1 <- renderText({ "dumb"
+    if(exists("aMLE")){"stuff"}
+  }) 
 })
