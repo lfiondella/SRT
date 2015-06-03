@@ -35,11 +35,9 @@ tags$head(includeScript("analytics/google-analytics.js")),
        #conditionalPanel(condition="input.Model != 'NM'",checkboxInput('OD', 'View Original Data', TRUE)),
     width=3),
 
-
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot", height = "700px")
-   ,width=9)
+      plotOutput("distPlot", height = "700px"),width=9)
   ),
   
   includeHTML("analytics/clustrmaps.html"),
