@@ -43,8 +43,8 @@ GO_BM_MLE<-function(x){
   if(leftEndPointMLE*rightEndPointMLE > 0 ){
     f[1] <- 0
     f[2] <- 0
-   x <- f[1,(1:2)]
-    f <- data.frame(x)
+    #x <- f[1,(1:2)]
+    #f <- data.frame(x)
     return(x)
   } else {
     bMLE <- uniroot(GO_BM_DDB,lower=leftEndPoint,upper=rightEndPoint, tol = 1e-10)$root

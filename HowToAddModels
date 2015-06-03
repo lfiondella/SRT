@@ -1,0 +1,16 @@
+In order to add a new function to the program, a number of steps must be taken to integrate it.  
+Most likely you have an R script that runs independently. 
+This needs to become a function. 
+This function should take an input of some combination of FT, FC, or IF.
+The function may name them whatever is appropriate but those are the variable that may be passed.
+Any print statements will only print to the servers console, it will not appear in the webpage.
+Same goes for plot statements or any other outputs. 
+The function must return the N0 and Phi in an array in this order.
+You may return initial guesses for N0 and Phi as the 3rd and 4th parameters in this array if desired.
+source the file in server.R in the form source("filename.R")
+Make the call to the function towards the top of server.R in the form GO_EM <- GO_EM_FT(FT)
+copy the format of the if statements for the new model
+add your model name and abbreviation to the selectInput in ui.R 
+the model name and abbreviation must match between the server.R and ui.R
+
+
