@@ -42,6 +42,7 @@ tags$head(includeScript("analytics/google-analytics.js")),
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       
       plotOutput("distPlot", height = "700px")
@@ -61,6 +62,10 @@ tags$head(includeScript("analytics/google-analytics.js")),
 =======
       plotOutput("distPlot", height = "700px"),width=9)
 >>>>>>> 64c0483b5ee4e16447a47a263ede664ba13754ec
+=======
+      plotOutput("distPlot", height = "700px")
+    ,width=9)
+>>>>>>> fb768b9195cc965f738c8f6c38edef282dd89691
   ),
   
 >>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
