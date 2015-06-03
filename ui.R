@@ -27,8 +27,8 @@ tags$head(includeScript("analytics/google-analytics.js")),
      # checkboxInput('reverse', "Reverse x and y", FALSE),
       selectInput("Model", "Select implementation model",
             c("No Model Selected"="NM","Jelinski-Moranda Model" = "JM",
-              "Goel-Okumoto Model" = "GO"#,
-              #"Yamada S-Shaped" = "YS",
+              "Goel-Okumoto Model" = "GO",
+              "Goel-Okumoto Model(EM)" = "GO_EM_FT"
               #"Geometric" = "GEO"
               ),selected = NULL),
              #here because of commented out line above
@@ -39,6 +39,7 @@ tags$head(includeScript("analytics/google-analytics.js")),
 
     # Show a plot of the generated distribution
     mainPanel(
+<<<<<<< HEAD
       
       
       plotOutput("distPlot", height = "700px")
@@ -46,6 +47,13 @@ tags$head(includeScript("analytics/google-analytics.js")),
   
    
    ),
+=======
+      textOutput("text1"),
+      plotOutput("distPlot", height = "700px")
+   ,width=9)
+  ),
+  
+>>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
   includeHTML("analytics/clustrmaps.html"),
   includeHTML("analytics/statcounter.html"),
 

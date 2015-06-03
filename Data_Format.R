@@ -83,4 +83,35 @@ while(i < num_count)
 return(failure_T)#return failure times(failure_t)
 }
 
+createFields <- function(data){
+  len <- nrow(data[1]) #length of data
+  FC<-c(1:len)  #vector of failure counts from 1 to length
+  names(FC)<-"FC" #naming the vector
+  
+  if (names(data[1]) =="FT"){ #if the first column is failure times, convert to interfail
+    FT <- data[,1]
+    names(FT)<-"FT"
+    IF <- failureT_to_interF(data[,1]) #converts from failure times to interfailure times
+    names(IF)<-"IF"
+  }else if(names(data[1]) == "IF"){ #if the first column is interfailure times, convert to failure time
+    IF <- data[,1]
+    names(IF)<-"IF"
+    FT <-interF_to_failureT(data[,1]) 
+    names(FT)<-"FT"
+  }else if(names(data[1]) == "FC") { #if the first column is failure count and next rows are IF or FT
+    FC <- data[,1]
+    names(FC)<-"FC"
+    if(names(data[2])=="FT"){#if second row is failure time find IF
+      FT <- data[,2]
+      names(FT)<-"FT"
+      IF <- failureT_to_interF(data[,2])
+      names(IF)<-"IF"
+    }else if(names(data[2])=="IF"){#if second row is interfailure times find FT
+      IF <- data[,2]
+      names(IF)<-"IF"
+      FT <-interF_to_failureT(data[,2])
+      names(FT)<-"FT"}
+  }
+  return(list(FC=FC,FT=FT,IF=IF))
+}
 
