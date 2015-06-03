@@ -20,7 +20,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
   
   output$distPlot <- renderPlot({ #reactive function, basically Main()
     
-<<<<<<< HEAD
+
     uploadData<-fileInput()
     if(is.null(uploadData))
       return("upload file")
@@ -30,23 +30,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
     IF <- data$IF#[,2] 
     FT <- data$FT#[,3]
    
-=======
 
-    
-    inFile <- input$file #Read of input file
-    if (is.null(inFile))#error handling for null file pointer
-      return("Please Upload a CSV File")
-    else if (input$type==1)
-      data <- read.xls(inFile$datapath,sheet=1,perl=perl)#Reads xls and xlsx files. Perl needed for local windows machines if using newest versions
-    else if (input$type==2)
-      data <- read.csv(inFile$datapath, header = input$header, sep = input$sep , quote = " % ")#same as before needs error handling
-    
-    temp <- createFields(data)
-    FC <- temp$FC
-    FT <- temp$FT
-    IF <- temp$IF
-    
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
     data <- cbind(data.frame(FC),data.frame(IF))#combines Failure Count and Interfailure, used for plotting original data DO NOT PASS TO MODELS
 
     GO_EM <- GO_EM_FT(FT)
@@ -66,12 +50,12 @@ shinyServer(function(input, output) {#reactive shiny fuction
     
     
     if (input$Model == "JM"){
-<<<<<<< HEAD
+
       model <- c("Jelinski-Moranda Model")
       JM_BM <- JMR()
-=======
+
       
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
+
       aMLE <- as.numeric(JM_BM[1])#aMLE returned from GO_BM_MLE
       bMLE <- as.numeric(JM_BM[2])#bMLE returned from GO_BM_MLE
       
@@ -84,16 +68,14 @@ shinyServer(function(input, output) {#reactive shiny fuction
       Time <- names(data[2])#generic name of column name of data frame (x-axis)
       Failure <- names(data[1])#(y-axis)
       p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
-<<<<<<< HEAD
-      p <- p + geom_point(data=data,aes(color="red",group="Jelinski-Moranda Model"))
-=======
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
       p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
       #p <- p + geom_line(data=data,aes(color="red",group="Jelinski-Moranda Model"))
       
       
     }
     if (input$Model == "GO_EM_FT"){
+      
+      model <- c("Goel-Okumoto Model(EM)")
       
       aMLE <- as.numeric(GO_EM[1])#aMLE returned from GO_BM_MLE
       bMLE <- as.numeric(GO_EM[2])#bMLE returned from GO_BM_MLE
@@ -108,17 +90,17 @@ shinyServer(function(input, output) {#reactive shiny fuction
       p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
       p <- p + geom_line(data=data,aes(color="red",group="Goel-Okumoto Model(EM)"))
       
-      model <- c("Goel-Okumoto Model(EM)")
+      
     }
 
     if (input$Model == "GO"){
-<<<<<<< HEAD
+
       model <- c("Geol-Okumoto Model")
       GO_BM <- GO_BM_MLE(FT)#finds aMLE and bMLE from failure times
-=======
+
       
       #finds aMLE and bMLE from failure times
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
+
       aMLE <- as.numeric(GO_BM[1])#aMLE returned from GO_BM_MLE
       bMLE <- as.numeric(GO_BM[2])#bMLE returned from GO_BM_MLE
       MVF_data <- data.frame(MVF(FT,aMLE,bMLE))#Mean Value Function that takes Failure Count and the two MLE variables #data frame
@@ -129,16 +111,12 @@ shinyServer(function(input, output) {#reactive shiny fuction
       Time <- names(data[2])#generic name of column name of data frame (x-axis)
       Failure <- names(data[1])#(y-axis)
       p <- ggplot(,aes_string(x=Time,y=Failure))#This function needs aes_string() to work
-<<<<<<< HEAD
+
       
       p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
       p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))
       data <- cbind(FC, FT)
-      p <- p + geom_point(data=data,aes(color="blue",group="Geol-Okumoto Model"))
-=======
-      #p <- p + geom_point(data=data,aes(color="red",group="Geol-Okumoto Model"))
-      p <- p + geom_line(data=data,aes(color="red",group="Geol-Okumoto Model"))  
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
+
       #p <- p + stat_function(fun = MVF(FT,aMLE,bMLE),aes(color="red",group="Geol-Okumoto Model"))
       
     }
@@ -170,7 +148,7 @@ shinyServer(function(input, output) {#reactive shiny fuction
 
     #plot(data) Leave this here to use if ggplot() stops working. 
   } )
-<<<<<<< HEAD
+
   #data<-reactiveValues(FT=typeConvert()$FT)
   output$aMLEText<-  renderText({
     if (!is.null(input$file))
@@ -226,10 +204,5 @@ shinyServer(function(input, output) {#reactive shiny fuction
     data
   })
   
-  
-=======
-#  output$text1 <- renderText({ "dumb"
-#    if(exists("aMLE")){"stuff"}
-#  }) 
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
+
 })

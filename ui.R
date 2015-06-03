@@ -38,37 +38,11 @@ tags$head(includeScript("analytics/google-analytics.js")),
 
     # Show a plot of the generated distribution
     mainPanel(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      
-      
       plotOutput("distPlot", height = "700px")
    ,width=9)
-  
    
    ),
-=======
-      textOutput("text1"),
-=======
-      #textOutput("text1"),
->>>>>>> fdee514d2eb50a299cefe3abee621c33f34a1eb1
-=======
->>>>>>> 2a0f04ff7f1df03a680b9a47204644b5d125e148
-      plotOutput("distPlot", height = "700px")
-   ,width=9)
-=======
-      plotOutput("distPlot", height = "700px"),width=9)
->>>>>>> 64c0483b5ee4e16447a47a263ede664ba13754ec
-=======
-      plotOutput("distPlot", height = "700px")
-    ,width=9)
->>>>>>> fb768b9195cc965f738c8f6c38edef282dd89691
-  ),
-  
->>>>>>> 1d1e0cba1306ef95ae081c0ab65b5ffcd7bd7b17
+
   includeHTML("analytics/clustrmaps.html"),
   includeHTML("analytics/statcounter.html"),
 
