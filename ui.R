@@ -40,6 +40,7 @@ tags$head(includeScript("analytics/google-analytics.js")),
     # Show a plot of the generated distribution
     mainPanel(
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       
       plotOutput("distPlot", height = "700px")
@@ -49,6 +50,9 @@ tags$head(includeScript("analytics/google-analytics.js")),
    ),
 =======
       textOutput("text1"),
+=======
+      #textOutput("text1"),
+>>>>>>> fdee514d2eb50a299cefe3abee621c33f34a1eb1
       plotOutput("distPlot", height = "700px")
    ,width=9)
   ),
