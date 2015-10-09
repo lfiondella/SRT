@@ -8,6 +8,13 @@ n <- length(interFail)
 # Define MLE of parameter 'N0'
 
 MLEeq<-function(N0){
+  # Creates a function MLEeq.
+  #
+  # Args:
+  #   N0: integer
+  #
+  # Returns:
+  #   N0_MLE: double
 leftTerm = 0
 interFailSum = 0
 rightTermDenominator = 0
@@ -17,6 +24,8 @@ for(i in 1:n){
 	rightTermDenominator = rightTermDenominator+((N0-(i-1))*interFail[i])
 }
 N0_MLE <- leftTerm-((n* interFailSum)/rightTermDenominator)
+# stop(print(typeof(N0_MLE)))
+# stop(print(typeof(N0)))
 return(N0_MLE)
 }
 
