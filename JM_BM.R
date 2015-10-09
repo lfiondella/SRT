@@ -104,6 +104,13 @@ return(JM_params)
 }
 
 JM_MVF_efficient <- function(param,d){
+  # Creates a function JM_MVF_efficient.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   g: data frame
   n <- length(d$FT)
   r <-data.frame()
   cumulr <-data.frame()
