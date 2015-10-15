@@ -69,7 +69,16 @@ if(leftEndPointMLE*rightEndPointMLE > 0 ){
 
 
   maxiter <- 20
+  
+  
   soln <- function(maxiter){
+    # Creates a function soln.
+    #
+    # Args:
+    #   maxiter: ?
+    #
+    # Returns:
+    #   sol: ?
     sol <- tryCatch(
       stats::uniroot(MLEeq, c(leftEndPoint,rightEndPoint), maxiter=maxiter, tol=1e-10)$root,
       warning = function(w){
@@ -81,9 +90,11 @@ if(leftEndPointMLE*rightEndPointMLE > 0 ){
       },
       error = function(e){
         print(e)
-      })
+      })   
     sol
   }
+  
+  
   N0_MLE <- soln(maxiter)
 
   if(N0_MLE < n){
@@ -132,6 +143,13 @@ JM_MVF_efficient <- function(param,d){
 
 
 JM_MVF <- function(param,d) {
+  # Creates a function JM_MVF.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FT)
   r <- data.frame()
   fail_number <- c(1:n)
@@ -145,6 +163,13 @@ JM_MVF <- function(param,d) {
 # a specific value of MVF.
 
 JM_MVF_inv <- function(param,d) {
+  # Creates a function JM_MVF_inv.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FN)
   r <- data.frame()
   cumFailTimes <- -(log((param$JM_N0-d$FN)/param$JM_N0))/param$JM_Phi
@@ -155,6 +180,13 @@ JM_MVF_inv <- function(param,d) {
 
 
 JM_MTTF <- function(param,d){
+  # Creates a function JM_MTTF.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FT)
   r <-data.frame()
   fail_number <- c(0:(n-1))
@@ -165,6 +197,13 @@ JM_MTTF <- function(param,d){
 }
 
 JM_FI <- function(param,d){
+  # Creates a function JM_FI.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FT)
   r <-data.frame()
   fail_number <- c(1:n)
@@ -175,6 +214,13 @@ JM_FI <- function(param,d){
 }
 
 JM_R <- function(param,d){
+  # Creates a function JM_R.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FT)
   r <-data.frame()
   cumulr <-data.frame()
@@ -188,6 +234,13 @@ JM_R <- function(param,d){
 }
 
 JM_MVF_r <- function(param,d){
+  # Creates a function JM_MVF_r.
+  #
+  # Args:
+  #   param: 
+  #   d:
+  # Returns:
+  #   r: data frame
   n <- length(d$FT)
   r <- data.frame()
   t_index <- seq(d$FT[1],d$FT[n],(d$FT[n]-d$FT[1])/100)
@@ -202,7 +255,14 @@ JM_MVF_r <- function(param,d){
 
 # Maximum value of Log-likelihood
 
-JM_lnL <- function(x,params){ # ----> params should be the option to generalize
+JM_lnL <- function(x,params){  
+  # Creates a function JM_lnL. Params should be the option to generalize
+  #
+  # Args:
+  #   x: 
+  #   params:
+  # Returns:
+  #   lnL: 
     n <- length(x)          
     secondTerm=0
     thirdTerm = 0
@@ -217,13 +277,28 @@ JM_lnL <- function(x,params){ # ----> params should be the option to generalize
  
  #Faults Remaining
  
- JM_FaultsRemaining <- function(params,n){ # ----> params should be passed instead
+ JM_FaultsRemaining <- function(params,n){  
+   # Creates a function JM_FaultsRemaining. Params should be passed instead
+   #
+   # Args:
+   #   params: 
+   #   n:
+   # Returns:
+   #   floor(params$JM_N0-n): 
   return(floor(params$JM_N0-n))
  }
  
  #Reliability
 
- JM_Reliability <- function(n,x,params){ # params should be passed instead
+ JM_Reliability <- function(n,x,params){ 
+   # Creates a function JM_Reliability. Params should be passed instead
+   #
+   # Args:
+   #   n:
+   #   x:
+   #   params:
+   # Returns:
+   #   Reliability:
   Reliability <- numeric(0)
   Reliability <- exp(-params$Phi*(params$JM_N0-(i-1))*x[i])
   return(Reliability)
@@ -232,26 +307,60 @@ JM_lnL <- function(x,params){ # ----> params should be the option to generalize
 
 
 JM_MVF_cont <- function(params,t){
+  # Creates a function JM_MVF_cont. 
+  #
+  # Args:
+  #   params:
+  #   t:
+  # Returns:
+  #   params$JM_N0*(1-exp(-params$JM_Phi*t)): 
   return(params$JM_N0*(1-exp(-params$JM_Phi*t)))
 }
 
 JM_R_delta <- function(params,cur_time,delta){
+  # Creates a function JM_R_delta. 
+  #
+  # Args:
+  #   params:
+  #   cur_time:
+  #   delta: 
+  # Returns:
+  #   ?: 
   return(exp(-(JM_MVF_cont(params,(cur_time+delta)) -JM_MVF_cont(params,cur_time))))
 }
 
 JM_R_MLE_root <- function(params,cur_time,delta, reliability){
+  # Creates a function JM_R_MLE_root. 
+  #
+  # Args:
+  #   params:
+  #   cur_time:
+  #   delta:
+  #   reliability:
+  # Returns:
+  #   root_equation: 
   root_equation <- reliability - exp(params$JM_N0*(1-exp(-params$JM_Phi*cur_time)) - params$JM_N0*(1-exp(-params$JM_Phi*(cur_time+delta))))
   return(root_equation)
 }
 
 maxiter <- 1000
-JM_Target_T <- function(params,cur_time,delta, reliability){
 
+JM_Target_T <- function(params,cur_time,delta, reliability){
+  # Creates a function JM_Target_T. 
+  #
+  # Args:
+  #   params:
+  #   cur_time:
+  #   delta:
+  #   reliability:
+  # Returns:
+  #   sol:
   f <- function(t){
     return(JM_R_MLE_root(params,t,delta, reliability))
   }
 
   current_rel <- JM_R_delta(params,cur_time,delta)
+  
   if(current_rel < reliability){
       sol <- tryCatch(
         uniroot(f, c(cur_time,cur_time + 50),extendInt="yes", maxiter=maxiter, tol=1e-10)$root,
@@ -276,7 +385,14 @@ JM_Target_T <- function(params,cur_time,delta, reliability){
 
 
 JM_R_growth <- function(params,d,delta){  
-  
+  # Creates a function JM_R_growth. 
+  #
+  # Args:
+  #   params:
+  #   d:
+  #   delta:
+  # Returns:
+  #   g: data frame
   r <-data.frame()
   for(i in 1:length(d$FT)){   
     r[i,1] <- d$FT[i]
