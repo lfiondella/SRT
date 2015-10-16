@@ -3,8 +3,9 @@
 
 #Define n, tn and sumT
 DSS_BM_MLE <- function(x){
+  #initialize variables
   x <- as.numeric(x)
-  n <- length(x)
+  n <- length(x) #n is set to length of x
   tn <- x[n]
   sumT <- sum(x)
   
@@ -102,10 +103,10 @@ DSS_MVF <- function(param,d){
 
 # Inverse Mean Value function
 DSS_MVF_inv <- function(param,d){
-  
+  #initialize variables
   f <- function(t,numFails) param$DSS_aMLE*(1-exp(-1*t*param$DSS_bMLE)*(1+t*param$DSS_bMLE))-numFails
   
-  n <- length(d$FN)
+  n <- length(d$FN) #n is set to the length of FN
   r <- data.frame()
   for(i in 1:n){
     lowerBound <- -(log((param$DSS_aMLE-d$FN[i])/param$DSS_aMLE))/param$DSS_bMLE
@@ -133,7 +134,8 @@ DSS_MVF_inv <- function(param,d){
 # log-Likelihood
 DSS_lnL <- function(x,params){ # ----> params should be the option to generalize
   #lnL <- -aMLE*(1-(1+bMLE*tn)*exp(-bMLE*tn))+n*log(aMLE)+2*n*log(bMLE)+sum(log(x))-bMLE*sum(x)
-  n <- length(x)
+  #initialize variables
+  n <- length(x) #n is set to length of x
   tn <- x[n]
   firstSumTerm=0
   secondSumTerm = 0
@@ -146,8 +148,9 @@ DSS_lnL <- function(x,params){ # ----> params should be the option to generalize
   return(lnL)
 }
 
-
+# mean time to failure function
 DSS_MTTF <- function(params,d){
+  #initialize variables
   x <- as.numeric(d$FT)
   n <- length(d$FT)
   r <-data.frame()
@@ -163,8 +166,9 @@ DSS_MTTF <- function(params,d){
   r
 }
 
-
+# Failure intensity 
 DSS_FI <- function(params,d){
+  #initialize variables
   n <- length(d$FT)
   r <-data.frame()
   cumulr <-data.frame()
@@ -180,6 +184,8 @@ DSS_FI <- function(params,d){
 
 
 DSS_R <- function(params,d){
+  
+  #initialize variables
   n <- length(d$FT)
   r <-data.frame()
   cumulr <-data.frame()
@@ -193,6 +199,7 @@ DSS_R <- function(params,d){
   r
 }
 
+#remaining faults function
 DSS_Faults_Remain <- function(){
   # a(1+ bt)e^(-bt)
 }
