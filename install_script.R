@@ -1,4 +1,5 @@
 #This file should be run the first time using this program to ensure R is up to date and all dependencies are intalled and loaded
+#will aotomatically update R if on windows, and install all packages for any platform.
 #run via source with echo in the top right drop down menu, or with Ctrl+Shift+Enter
 
 if (version$major < 3 || (version$major == 3 && version$minor < 2.2)){ #checks if R is already up to date
