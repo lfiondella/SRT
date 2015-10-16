@@ -23,4 +23,4 @@ if(!require(shiny)) {install.packages("shiny");require(shiny)} #shiny is the mai
 if(!require(gdata)) {install.packages("gdata");require(gdata)} #gdata is used for manipulating the data out of an excel sheet
 if(!require(ggplot2)) {install.packages("ggplot2");require(ggplot2)} #ggplot2 is used for crerating various plots
 if(!require(rootSolve)) {install.packages("rootSolve");require(rootSolve)} #rootSolve is used for finding a root of an equation
-
+if(!require(DT)) {install.packages("DT");require(DT)} #DT is used for creating data tables
