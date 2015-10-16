@@ -25,7 +25,7 @@ for(i in 1:n){
 }
 N0_MLE <- leftTerm-((n* interFailSum)/rightTermDenominator)
 # stop(print(typeof(N0_MLE)))
-# stop(print(typeof(N0)))
+
 return(N0_MLE)
 }
 
