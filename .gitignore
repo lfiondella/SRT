@@ -1,7 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
-SRT.Rproj
+*.Rproj
 *.png
 *.pdf
 *.out

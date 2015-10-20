@@ -1,22 +1,42 @@
 #x <- c(3, 33, 146, 227, 342, 351, 353, 444,556, 571, 709, 759, 836, 860, 968,1056, 1726, 1846, 1872, 1986, 2311,2366, 2608, 2676, 3098, 3278, 3288,4434, 5034, 5049, 5085, 5089, 5089,5097, 5324, 5389, 5565, 5623, 6080,6380, 6477, 6740, 7192, 7447, 7644,7837, 7843, 7922, 8738, 10089, 10237,10258, 10491, 10625, 10982, 11175,11411, 11442, 11811, 12559, 12559,12791, 13121, 13486, 14708, 15251,15261, 15277, 15806, 16185, 16229,16358, 17168, 17458, 17758, 18287,18568, 18728, 19556, 20567, 21012,21308, 23063, 24127, 25910, 26770,27753, 28460, 28493, 29361, 30085,32408, 35338, 36799, 37642, 37654,37915, 39715, 40580, 42015, 42045,42188, 42296, 42296, 45406, 46653,47596, 48296, 49171, 49416, 50145,52042, 52489, 52875, 53321, 53443,54433, 55381, 56463, 56485, 56560, 57042, 62551, 62651, 62661, 63732,64103, 64893, 71043, 74364, 75409,76057, 81542, 82702, 84566, 88682)
 
 
-
+# Geometric Bisection Method Maximum Likelihood Estimate
 
 GM_BM_MLE <- function(interFail){
   # TODO :
       # ----> as numeric is prefered if data contain large values Should consider its propagation effect through out
       # ----> should also check its effects on precision.
 
-  interFail <- as.numeric(interFail)  
-n <-length(interFail)
-
-
-MLEeq<-function(phi){
-  NrTerm  <- 0
-  DrTerm  <- 0
+  # Computes the maximum likelikehood estimate for the Geometric model
+  #
+  # Params:
+  #   interFail - a vector of interfailure times to calculate the MLE for
+  #
+  # Returns: 
+  #   output - a vector with two values; output[1] is GM_DO, output[2] is GM_Phi
   
-  for(i in 1:n){
+  
+  # ----> should probably be named interfail, interFail implies it is two words and not one
+  interFail <- as.numeric(interFail)  
+n <-length(interFail) # -----> suggest name change to lengthInterfail or something more meaningful than n
+
+# Maximum Likelihood Estimate equation
+MLEeq<-function(phi){
+  #Computes the maximum likelihood estimate for some paramater phi
+  #
+  # Params:
+  #   phi - the input parameter
+  #
+  # Returns:
+  #   phi_MLE - the maximum likelihood estimate of phi
+  # Note: as written this function must be called in the same workspace as a set of interfailure data, and must include
+  # a variable n equal to the length of the interfailure data
+  
+  NrTerm  <- 0 # -----? NrTerm is some term of the equation, not sure which
+  DrTerm  <- 0 # -----? DrTerm is some term of the equation, not sure which; variable capitalization is inconsistent with rest of file
+  
+  for(i in 1:n){ #iterate for the length of interfail
     NrTerm =NrTerm+(i*(phi^i)*interFail[i])
     DrTerm = DrTerm +((phi^i)*interFail[i])
   }
@@ -29,14 +49,14 @@ MLEeq<-function(phi){
 
 #b0 <- n/sum(interFail)
 #b0 <- n
-b0 <- 1.0
+b0 <- 1.0 # ----? Is b0 meaningful to a mathematician? Otherwise perhaps a better name would be initialParamEst
 
 #Step-2: Bracket root
 
 i <- 0 
 maxIterations <- 200
 leftEndPoint <- b0/2
-leftEndPointMLE <- MLEeq(leftEndPoint)
+leftEndPointMLE <- MLEeq(leftEndPoint) #Maximum likelihood for the left end point of the data
 rightEndPoint <- 1.2*b0
 rightEndPointMLE <- MLEeq(rightEndPoint)
 
@@ -56,9 +76,10 @@ if(leftEndPointMLE*rightEndPointMLE > 0 ){
 } else {
 
 
-  maxiter <- 20
+  maxiter <- 20 # max iterations for the soln function
   soln <- function(maxiter){
     sol <- tryCatch(
+      #
       stats::uniroot(MLEeq, c(leftEndPoint,rightEndPoint), maxiter=maxiter, tol=1e-10, extendInt="yes")$root,
       warning = function(w){
       #print(f.lower)
@@ -72,7 +93,7 @@ if(leftEndPointMLE*rightEndPointMLE > 0 ){
         print(e)
         #return(e)
       })
-    sol
+    return(sol)
   }
   phiMLE <- soln(maxiter)
 
