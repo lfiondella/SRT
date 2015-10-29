@@ -56,11 +56,11 @@ b0 <- 1.0 # ----? Is b0 meaningful to a mathematician? Otherwise perhaps a bette
 i <- 0 
 maxIterations <- 200
 leftEndPoint <- b0/2
-leftEndPointMLE <- MLEeq(leftEndPoint) #Maximum likelihood for the left end point of the data
+leftEndPointMLE <- MLEeq(leftEndPoint) #Maximum likelihood estimate for the left end point of the data
 rightEndPoint <- 1.2*b0
-rightEndPointMLE <- MLEeq(rightEndPoint)
+rightEndPointMLE <- MLEeq(rightEndPoint) #Maximum likelihood estimate for the left end point of the data
 
-while(leftEndPointMLE*rightEndPointMLE > 0 & i <= maxIterations){
+while(leftEndPointMLE*rightEndPointMLE > 0 & i <= maxIterations){ #loop until proper bracket is found or max iterations
   #print('In Step 2 while loop of GM_BM.R')
   leftEndPoint <- leftEndPoint/2
   leftEndPointMLE <- MLEeq(leftEndPoint)
