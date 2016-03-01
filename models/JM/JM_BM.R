@@ -256,6 +256,7 @@ JM_MTTF <- function(param,d){
   r  
 }
 
+
 JM_FI <- function(param,d){
   #------------------------------------------------------------------------
   # This function computes the Failure Intensity for a given data
@@ -276,6 +277,7 @@ JM_FI <- function(param,d){
   names(r) <- c("Failure_Count","Failure_Rate","Model")
   r  
 }
+
 
 JM_R <- function(param,d){
   #---------------------------------------------------------------------------
@@ -299,6 +301,7 @@ JM_R <- function(param,d){
   names(r) <- c("Time","Reliability","Model")
   r
 }
+
 
 JM_MVF_r <- function(param,d){
   #---------------------------------------------------------------------------
@@ -328,6 +331,7 @@ JM_lnL <- function(x,params){
   #----------------------------------------------------------------------------
   # @params     (data.frame)    Data.frame of parameters
   # @d          (data.frame)    Data.frame of data FT,FC,FN,CFC,IF
+  # @x          (list)          list of d$IF
 
   # @returns    (numeric)       Numeric value of lnL
   #----------------------------------------------------------------------------
@@ -346,7 +350,7 @@ JM_lnL <- function(x,params){
 }
  
  #Faults Remaining
- 
+
 JM_FaultsRemaining <- function(params,n){
   #----------------------------------------------------------------------------
   # This function evaluates the Faults remaining in the system
@@ -381,7 +385,6 @@ JM_Reliability <- function(n,x,params){
   Reliability <- exp(-params$Phi*(params$JM_N0-(i-1))*x[i])
   return(Reliability)
 }
- 
 
 
 JM_MVF_cont <- function(params,t){
@@ -399,6 +402,7 @@ JM_MVF_cont <- function(params,t){
   return(params$JM_N0*(1-exp(-params$JM_Phi*t)))
 }
 
+
 JM_R_delta <- function(params,cur_time,delta){
   #----------------------------------------------------------------------------
   # This function computes the Change in Reliability with delta change in time
@@ -413,6 +417,7 @@ JM_R_delta <- function(params,cur_time,delta){
   #===========================================================================
   return(exp(-(JM_MVF_cont(params,(cur_time+delta)) -JM_MVF_cont(params,cur_time))))
 }
+
 
 JM_R_BM_root <- function(params,cur_time,delta, reliability){
   #---------------------------------------------------------------------------
@@ -430,6 +435,7 @@ JM_R_BM_root <- function(params,cur_time,delta, reliability){
   root_equation <- reliability - exp(params$JM_N0*(1-exp(-params$JM_Phi*cur_time)) - params$JM_N0*(1-exp(-params$JM_Phi*(cur_time+delta))))
   return(root_equation)
 }
+
 
 maxiter <- 1000
 JM_Target_T <- function(params,cur_time,delta, reliability){
